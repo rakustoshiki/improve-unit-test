@@ -7,6 +7,11 @@
 | ユニットテスト | コンポーネントのrenderを必要としないテスト<br>拡張子がts |
 | コンポーネントテスト | コンポーネントのrenderを必要とするテスト<br>拡張子がtsx |
 
+## 前提
+
+- キャッシュなしの状態で測定する
+  - `vite.config`で`cacheDir: "node_modules/.test"`を設定し毎回削除
+
 ## ユニットテスト
 
 ### ベンチマーク
@@ -96,12 +101,14 @@ describe("example", () => {
 ```
 
 ### 改善前の状態
-sum: 13.34s 
+sum: 11.55s
 | 項目          | 時間      |
 |---------------|-----------|
-| Transform     | 1.05s     |
-| Setup         | 201ms     |
-| Collect       | 11.38s    |
-| Tests         | 517ms     |
-| Environment   | 655ms     |
-| Prepare       | 272ms     |
+| Transform     | 810ms     |
+| Setup         | 290ms     |
+| Collect       | 9.42s     |
+| Tests         | 371ms     |
+| Environment   | 1.04s     |
+| Prepare       | 113ms     |
+
+### 改善1: 
