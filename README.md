@@ -223,3 +223,7 @@ sum: 12.06s
 | Prepare      | 253ms    |
 
 - 微改善
+
+### 改善2-4: shardingを試す
+https://vitest.dev/guide/improving-performance#sharding
+TBD
