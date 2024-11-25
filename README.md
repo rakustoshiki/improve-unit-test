@@ -227,3 +227,10 @@ sum: 12.06s
 ### 改善2-4: shardingを試す
 https://vitest.dev/guide/improving-performance#sharding
 TBD
+
+### 雑記
+`yarn test tests/features/shiwakeExportSettings/shiwakeExportSettings.spec.tsx`意外にも早い
+Duration  15.50s (transform 865ms, setup 170ms, collect 7.31s, tests 6.16s, environment 438ms, prepare 84ms)
+むしろ全部モックした方がはやい？
+
+目標：157s以下
