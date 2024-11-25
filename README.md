@@ -233,4 +233,59 @@ TBD
 Duration  15.50s (transform 865ms, setup 170ms, collect 7.31s, tests 6.16s, environment 438ms, prepare 84ms)
 むしろ全部モックした方がはやい？
 
+ベンチマーク以下に変えてみたけど、あんま変わらんかった
+
+```ts
+import { render, screen } from "@testing-library/react";
+import { tanStackQueryClient } from "src/lib/tanStackQueryClient";
+import { TestProviders } from "tests/TestProviders";
+import { server } from "tests/mocks/server";
+
+import KanjoKamokuSettingsContainer from "src/components/pages/KanjoKamokuSettings";
+
+describe("example", () => {
+  beforeAll(() => {
+    server.listen({ onUnhandledRequest: "error" });
+  });
+
+  afterEach(() => {
+    tanStackQueryClient.clear();
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  it("データが正常に表示されること", async () => {
+    // arrange
+    render(<KanjoKamokuSettingsContainer />, {
+      wrapper: TestProviders,
+    });
+    await screen.findByText("勘定科目設定");
+
+    // assert
+    const rows = screen.getAllByRole("row");
+    const [checkbox, editButton, code, kanjoKamokuName, memo] =
+      rows[1].children;
+
+    expect(checkbox).toBeInTheDocument();
+    expect(editButton).toBeInTheDocument();
+    expect(code.textContent).toEqual("kanjo001");
+    expect(kanjoKamokuName.textContent).toEqual("普通預金");
+    expect(memo.textContent).toEqual("メモ");
+  });
+});
+```
+
+sum: 11.34s
+| 項目         | 時間     |
+|--------------|----------|
+| Transform    | 924ms    |
+| Setup        | 259ms    |
+| Collect      | 8.51s    |
+| Tests        | 574ms    |
+| Environment  | 543ms    |
+| Prepare      | 91ms     |
+
 目標：157s以下
