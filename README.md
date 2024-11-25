@@ -22,7 +22,7 @@
 
 - キャッシュなしの状態で測定する
   - `vite.config`で`cacheDir: "node_modules/.test"`を設定し毎回削除
-
+- Vitestのバージョンは`v2.1.5`
 ## ユニットテスト
 
 ### ベンチマーク
@@ -121,5 +121,10 @@ sum: 11.55s
 | Tests         | 371ms     |
 | Environment   | 1.04s     |
 | Prepare       | 113ms     |
+
+- ほぼ`Collect`の時間がテストの時間を決めている
+- Collectは計測のブレが大きい
+  - 6~13s程度のブレがある
+  - キャッシュは関係ない
 
 ### 改善1: 
