@@ -127,7 +127,7 @@ sum: 11.55s
   - 6~13s程度のブレがある
   - キャッシュは関係ない
 
-### 命題: **Collect**が大きいのはなぜ？
+### 命題1: **Collect**が大きいのはなぜ？
 1. 読み込んでいるコンポーネントのファイルサイズが大きい？
 
 ### 改善1: ベンチマークを軽いコンポーネントに変えてみる
@@ -162,3 +162,64 @@ sum: 2.17s
 - Vitest公式Docに[Improving Performance](https://vitest.dev/guide/improving-performance)の記述がある
 - こちらはCollectの改善というより、全体のテスト時間削減について書かれている
   - 一通り試してみる
+
+以下ディレクトリのテスト全てが終了するまでの時間を検証する
+
+```text
+tests/features/billingDetail
+├── billingDetail.spec.tsx
+├── billingInfoEditValidator.spec.tsx
+└── memoEditValidator.spec.tsx
+```
+
+sum: 15.91s
+| 項目         | 時間     |
+|--------------|----------|
+| Transform    | 788ms    |
+| Setup        | 612ms    |
+| Collect      | 28.67s   |
+| Tests        | 6.47s    |
+| Environment  | 1.73s    |
+| Prepare      | 280ms    |
+
+### 改善2-1: `--no-isolate`フラグをつけて実行
+
+sum: 16.15s
+| 項目         | 時間     |
+|--------------|----------|
+| Transform    | 958ms    |
+| Setup        | 551ms    |
+| Collect      | 28.80s   |
+| Tests        | 6.58s    |
+| Environment  | 1.47s    |
+| Prepare      | 256ms    |
+
+- 特に変化なし
+
+### 改善2-2: `--no-file-parallelism`フラグをつけて実行
+
+sum: 49.37s
+| 項目         | 時間     |
+|--------------|----------|
+| Transform    | 720ms    |
+| Setup        | 1.56s    |
+| Collect      | 33.57s   |
+| Tests        | 6.19s    |
+| Environment  | 3.02s    |
+| Prepare      | 276ms    |
+
+- かなり遅くなる
+
+### 改善2-3: poolをthredsにして実行（デフォルトはforks）
+
+sum: 12.06s
+| 項目         | 時間     |
+|--------------|----------|
+| Transform    | 916ms    |
+| Setup        | 650ms    |
+| Collect      | 23.82s   |
+| Tests        | 6.26s    |
+| Environment  | 1.73s    |
+| Prepare      | 253ms    |
+
+- 微改善
